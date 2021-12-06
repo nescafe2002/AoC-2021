@@ -25,21 +25,39 @@ var width = bits[0].Length;
 
 var sum = bits.Aggregate((x, y) => Enumerable.Range(0, x.Length).Select(i => x[i] + y[i]).ToArray()).Select(x => x * 2 > length).ToList();
 
-var a = Enumerable.Range(0, bits[0].Length).Where(x => sum[x]).Sum(x => Math.Pow(2, width - x - 1)).Dump();
-var b = Enumerable.Range(0, bits[0].Length).Where(x => !sum[x]).Sum(x => Math.Pow(2, width - x - 1)).Dump();
+int BitArrayToInt(bool[] value) => (int)Enumerable.Range(0, value.Length).Where(x => value[x]).Sum(x => Math.Pow(2, value.Length - x - 1));
 
-(a * b).Dump();
+var a = BitArrayToInt(sum.ToArray());
+var b = BitArrayToInt(sum.Select(x => !x).ToArray());
 
-(2539 * 709).Dump("Answer 2");
+(a * b).Dump("Answer 1");
+
+//(2539 * 709).Dump("Answer 2");
+
+(a, b) = (0, 0);
+
+var bits2 = bits.ToList();
+
+for (int i = 0; i < width; i++)
+{
+  var count = bits2.Sum(x => x[i]);
+  bits2.RemoveAll(x => x[i] == ((count * 2 >= bits2.Count) ? 1 : 0));
+  if (bits2.Count == 1)
+  {
+    a = BitArrayToInt(bits2[0].Select(x => bits2[0][x] == 0).ToArray());
+    break;
+  }
+}
 
 for (int i = 0; i < width; i++)
 {
   var count = bits.Sum(x => x[i]);
   bits.RemoveAll(x => x[i] == ((count * 2 >= bits.Count) ? 0 : 1));
-  //bits.Select(x => string.Join("", x)).Dump();
   if (bits.Count == 1)
   {
-    Enumerable.Range(0, bits[0].Length).Where(x => bits[0][x] == 1).Sum(x => Math.Pow(2, width - x - 1)).Dump();
-    return;
+    b = BitArrayToInt(bits[0].Select(x => bits[0][x] == 0).ToArray());
+    break;
   }
 }
+
+(a.Dump() * b.Dump()).Dump("Answer 2");
