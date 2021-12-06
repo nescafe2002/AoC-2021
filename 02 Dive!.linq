@@ -15,7 +15,7 @@ input = File.ReadAllLines("02 input.txt");
 
 var data = input.Select(x => x.Split(' ')).ToLookup(x => x[0], x => int.Parse(x[1]));
 
-var answer1 = (data["forward"].Sum() * (data["down"].Sum() - data["up"].Sum())).Dump("Answer 1");
+(data["forward"].Sum() * (data["down"].Sum() - data["up"].Sum())).Dump("Answer 1");
 
 // What do you get if you multiply your final horizontal position by your final depth?
 
@@ -24,14 +24,19 @@ var (horizontal, depth, aim) = (0, 0, 0);
 foreach (var line in input.Select(x => x.Split(' ')))
 {
   var value = int.Parse(line[1]);
-  if (line[0] == "down")
-    aim += value;
-  else if (line[0] == "up")
-    aim -= value;
-  else if (line[0] == "forward")
+
+  switch (line[0])
   {
-    horizontal += value;
-    depth += value * aim;
+    case "down":
+      aim += value;
+      break;
+    case "up":
+      aim -= value;
+      break;
+    case "forward":
+      horizontal += value;
+      depth += value * aim;
+      break;
   }
 }
 
