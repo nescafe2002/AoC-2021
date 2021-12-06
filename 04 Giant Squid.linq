@@ -61,11 +61,11 @@ foreach (var letter in input[0].Split(',').Select(int.Parse))
   {
     if (boards[i].Remove(letter, out var cell))
     {
-      rows[i][cell.Item1] = (rows[i].TryGetValue(cell.Item1, out var v) ? v : 0) + 1;
-      cols[i][cell.Item2] = (cols[i].TryGetValue(cell.Item2, out var w) ? w : 0) + 1;
+      if (!rows[i].TryAdd(cell.Item1, 1)) rows[i][cell.Item1]++;
+      if (!cols[i].TryAdd(cell.Item2, 1)) cols[i][cell.Item2]++;
     }
   }
-  
+
   // Output completed boards
 
   foreach (var i in Enumerable.Range(0, boards.Count).Where(x => !done.Contains(x) && (cols[x].Values.Contains(5) || rows[x].Values.Contains(5)) && done.Add(x)))
