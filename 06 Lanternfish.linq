@@ -6,25 +6,24 @@ var input = "3,4,3,1,2".Split(',');
 
 input = File.ReadAllText("06 input.txt").Split(',');
 
-var occurrences = new long[9];
+var population = new long[9];
 
 foreach (var item in input.Select(long.Parse).ToLookup(x => x))
 {
-  occurrences[item.Key] = item.Count();
+  population[item.Key] = item.Count();
 }
 
 for (int round = 0; round < 256; round++)
 {
-  var abc = occurrences[0];
-  occurrences[0] = occurrences[1];
-  occurrences[1] = occurrences[2];
-  occurrences[2] = occurrences[3];
-  occurrences[3] = occurrences[4];
-  occurrences[4] = occurrences[5];
-  occurrences[5] = occurrences[6];
-  occurrences[6] = occurrences[7] + abc;
-  occurrences[7] = occurrences[8];
-  occurrences[8] = abc;
+  var abc = population[0];
+
+  for (int i = 0; i <= 7; i++)
+  {
+    population[i] = population[i + 1];
+  }
+
+  population[6] += abc;
+  population[8] = abc;
 }
 
-occurrences.Sum().Dump("Answer 1/2");
+population.Sum().Dump("Answer 1/2");
